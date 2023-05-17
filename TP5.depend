@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1684289879 source:c:\marcos\utn\programaciónylaboratorio1\tp5\tp5\main.c
+	<stdio.h>
+	<stdlib.h>
+	<conio.h>
+
+1491400450 source:c:\marcos\utn\programaciónylaboratorio1\tp5\tp5\gotoxy.c
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+
