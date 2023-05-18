@@ -1,13 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
+#include <string.h>
 #define ESC 27
 #define MAX_ALUMNOS 20
 
 int cargarAlumno(int maximo, int legajos[], char nombres[][30], int anios[]);
 void mostrarAlumnos(int validos, int legajos[], char nombres[][30], int anios[]);
 int buscarLegajo(int validos, int legajos[], int dato) ;
-void buscarNombreLegajo(int v, int legajos[], int alumnos[][30], int anios, int dato);
+void buscarNombreLegajo(int v, int legajos[], char alumnos[][30], int anios, int dato);
+int menorDelArregloString(int v, char nombres[][30], int comienzo);
+void ordenarPorNombreSeleccion(int v, int legajos[], char nombres[][30], int anios);
+
 
 
 int main() {
@@ -27,6 +31,8 @@ void muestraMenu() {
     printf("\n2 - Mostra datos alumnos.");
     printf("\n3 - Buscar legajo.");
     printf("\n4 - Encontrar alumno a partir de un legajo.");
+    printf("\n5 - Ordenar la lista por nombre (seleccion).");
+
 }
 
 void opcionesMenu(int maximoAlumnos, int *alumCargados, int legajos[], char nombres[][30], int anios[]) {
@@ -92,6 +98,15 @@ void opcionesMenu(int maximoAlumnos, int *alumCargados, int legajos[], char nomb
             printf("\n");
             system("pause");
             break;
+        case 53:
+            if(*alumCargados != 0) {
+                ordenarPorNombreSeleccion(*alumCargados, legajos, nombres, anios);
+            } else {
+                printf("\nNo hay alumnos cargados...");
+            }
+            printf("\n");
+            system("pause");
+            break;
         case 27:
             printf("\nHasta luego...");
             break;
@@ -115,18 +130,22 @@ int cargarAlumno(int maximo, int legajos[], char nombres[][30], int anios[]) { /
             printf("\nIngrese el numero legajo del alumno (max 20 digitos): ");
             fflush(stdin);
             scanf("%d", &legajos[i]);
+
             printf("\nIngrese el nombre del alumno(max 29 caracteres): ");
             fflush(stdin);
             gets(nombres[i]);
+
             printf("\nIngrese la edad del alumno(max 20 digitos): ");
             fflush(stdin);
             scanf("%d", &anios[i]);
+
             i++;
         } else {
             printf("\nHa alcanzado la cantidad maxima de alumnos que puede cargar...");
         }
 
         printf("\nSi desea cargar otro alumno ENTER, para terminar ESC...");
+        fflush(stdin);
         opcion = getch();
 
     } while(opcion != ESC);
@@ -162,7 +181,55 @@ int buscarLegajo(int validos, int legajos[], int dato) {
 
 //3. Hacer una función que reciba como parámetro todos los arreglos y encuentre el nombre
 //correspondiente a un determinado legajo y lo imprima por pantalla. Se debe invocar la función 2.
-void buscarNombreLegajo(int v, int legajos[], int nombres[][30], int anios, int dato) {
-    printf("\nPosicion legajo %d", buscarLegajo(v, legajos, dato) );
+void buscarNombreLegajo(int v, int legajos[], char nombres[][30], int anios, int dato) {
+    printf("\nPosicion legajo %d", buscarLegajo(v, legajos, dato));
+    printf("\nnombre: %s", nombres[buscarLegajo(v, legajos, dato)]);
     printf("\nEl legajo %d es del alumno %s.", dato, nombres[buscarLegajo(v, legajos, dato)]);
 }
+
+//4. Hacer una función que reciba como parámetro todos los arreglos y los ordene por nombre.
+//(por el método de selección o inserción).
+
+int menorDelArregloString(int v, char nombres[][30], int comienzo){
+
+    int i = comienzo;
+    int posMenor = i;
+    i++;
+
+    while(i < v){
+        if(strcmpi(nombres[i], nombres[posMenor]) < 0){
+            posMenor = i;
+        }
+        i++;
+    }
+    return posMenor;
+}
+void ordenarPorNombreSeleccion(int v, int legajos[], char nombres[][30], int anios){
+
+    char aux[30];
+    int posMenor;
+    int i = 0;
+
+    while(i < (v - 1)){
+       posMenor = menorDelArregloString(v, nombres, i);
+       strcpy(aux ,nombres[posMenor]);
+       strcpy(nombres[posMenor],nombres[i]);
+       strcpy(nombres[i],aux);
+       i++;
+    }
+}
+/*
+void insertarOrdenado(int v, char nombres[][30], char elemento[]){
+
+    int i = v;
+
+    while(i >= 0 && strcmp(nombres[i],elemento) > 0){
+        strcpy(nombres[i+1], nombres[i]);
+        i--;
+    }
+    strcpy(nombres[i+1], elemento);
+}
+*/
+//5. Mostrar por pantalla los 3 arreglos pero de a un “registro” o alumno por vez (es decir: muestra
+//el legajo, nombre y años del 1er alumno, luego el legajo, nombre y años del 2do alumno, y así sucesivamente)..
+//es la funcion mostrar alumnos
